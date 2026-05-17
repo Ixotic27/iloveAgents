@@ -9,6 +9,7 @@
 
 export const CATEGORIES = [
   "Business",
+  "Content Writing",
   "Cybersecurity",
   "Data Science",
   "Design",
@@ -22,5 +23,6 @@ export const CATEGORIES = [
   "Productivity",
   "Research",
   "Healthcare",
-  "Sales"
+  "Sales",
+  "DevOps"
 ];

@@ -39,7 +39,7 @@ Each agent is a focused tool that does one thing really well — summarize meeti
 
 ## Available Agents
 
-33 agents and growing — built by the community. 🚀
+34 agents and growing — built by the community. 🚀
 
 | # | Agent | What It Does | Category |
 |---|-------|-------------|----------|
@@ -76,18 +76,18 @@ Each agent is a focused tool that does one thing really well — summarize meeti
 | 31 | Data Dictionary Generator | Paste your schema and get a complete data dictionary with field definitions and relationships | Engineering |
 | 32 | Accessibility Audit Generator | Paste your HTML and get a detailed WCAG audit with issues, severity ratings, and fixes | Engineering |
 | 33 | Personal Budget Analyzer | Analyze monthly income and expenses to get savings rate, benchmarks, and financial recommendations | Finance |
-
+| 34 | K8s Manifest Generator | Generates a full Kubernetes manifest from your app name, container image, port, and optional config | DevOps |
 > Want to add your own? It takes about 5 minutes. See [Contributing](#contributing) below.
 
 ---
 
 ## Supported Providers
 
-| Provider | Models | Get Your Key |
-|----------|--------|--------------|
-| OpenAI | GPT-4o, GPT-4o-mini | [platform.openai.com/api-keys](https://platform.openai.com/api-keys) |
-| Anthropic | Claude Opus, Claude Sonnet | [console.anthropic.com](https://console.anthropic.com/) |
-| Google Gemini | Gemini 2.5 Flash | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
+| Provider | Logo | Models | Get Your Key |
+|----------|------|--------|--------------|
+| OpenAI | <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" width="80"/> | GPT-4o, GPT-4o-mini | [platform.openai.com](https://platform.openai.com/api-keys) |
+| Anthropic | <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Anthropic_logo.svg" width="80"/> | Claude Opus, Claude Sonnet | [console.anthropic.com](https://console.anthropic.com/) |
+| Google Gemini | <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" width="80"/> | Gemini 2.5 Flash | [aistudio.google.com](https://aistudio.google.com/apikey) |
 
 You can switch providers on any agent at runtime from the dropdown. No restart needed.
 
@@ -180,9 +180,28 @@ npm run dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
+No API provider keys are required in a `.env` file because 
+they are entered at runtime and never stored anywhere.
 
-No `.env` file needed. API keys are entered at runtime and never stored anywhere.
+However, local development requires a `.env.local` file 
+for Supabase features like Workflows.
 
+Create a `.env.local` file in the root directory:
+
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+Note: AI provider API keys are still entered at runtime 
+and are never stored anywhere.
+
+However, local development may still require the following Supabase environment variables:
+
+```env
+VITE_SUPABASE_URL=...
+VITE_SUPABASE_ANON_KEY=...
+```
 ### Deploy Your Own
 
 1. Fork this repository
@@ -310,7 +329,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
 ## Community
 
 - [Support](./SUPPORT.md) — stuck on something? Drop a comment on your issue and I will reply within 24 hours
-- [Acknowledgments](./ACKNOWLEDGMENTS.md) — everyone who has contributed to this project
+- [Hall of Fame](./HALL_OF_FAME.md) — every person who has contributed to iloveAgents
 - [Maintainers](./MAINTAINERS.md) — who runs this project
 
 ---
