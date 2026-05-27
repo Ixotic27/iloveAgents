@@ -32,6 +32,7 @@ function AgentPill({ agentId, agentsMap }) {
 
 function WorkflowCard({ workflow, onRun, onView, agentsMap }) {
   const [usageCount, setUsageCount] = useState(workflow.usage_count ?? 0)
+  const agentIds = workflow.agents ?? []
 
   // Sync when parent data refreshes
   useEffect(() => {
@@ -93,10 +94,10 @@ function WorkflowCard({ workflow, onRun, onView, agentsMap }) {
 
       {/* Agent Sequence */}
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
-        {(workflow.agents ?? []).map((agentId, index) => (
+        {agentIds.map((agentId, index) => (
           <span key={agentId + index} className="flex items-center gap-1">
             <AgentPill agentId={agentId} agentsMap={agentsMap} />
-            {index < workflow.agents.length - 1 && (
+            {index < agentIds.length - 1 && (
               <ArrowRight size={10} className="dark:text-text-muted text-gray-400 flex-shrink-0" />
             )}
           </span>
@@ -125,7 +126,7 @@ function WorkflowCard({ workflow, onRun, onView, agentsMap }) {
           Details
         </button>
         <span className="ml-auto text-[11px] dark:text-text-muted text-gray-400">
-          {(workflow.agents ?? []).length} agent{workflow.agents?.length !== 1 ? 's' : ''}
+          {agentIds.length} agent{agentIds.length !== 1 ? 's' : ''}
         </span>
       </div>
     </div>

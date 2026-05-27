@@ -9,7 +9,7 @@ const AgentsContext = createContext(null)
  */
 export function AgentsProvider({ children }) {
   const [agents, setAgents] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [shouldLoad, setShouldLoad] = useState(false)
   const [loadVersion, setLoadVersion] = useState(0)
@@ -24,6 +24,7 @@ export function AgentsProvider({ children }) {
     if (!shouldLoad) return;
 
     let isMounted = true
+    setLoading(true)
 
     loadAllAgents()
       .then((loaded) => {
@@ -54,7 +55,8 @@ export function AgentsProvider({ children }) {
 
 /**
  * Hook to access the lazily-loaded agents list.
- * @returns {{ agents: Array, loading: boolean, error: Error | null }}
+ * @returns {{ agents: Array, loading: boolean, error: Error | null, reloadAgents: () => void }}
+ * reloadAgents: Function to retry loading agents if a transient error occurs.
  */
 export function useAgents() {
   const context = useContext(AgentsContext)
