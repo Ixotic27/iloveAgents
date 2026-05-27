@@ -6,6 +6,7 @@ import BattleNavbar from '../components/BattleNavbar'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
+import { useApiKey } from '../lib/useApiKey'
 
 const PROVIDERS = [
   {
@@ -63,7 +64,8 @@ function buildUserMessage(agent, inputs) {
 export default function BattleModeArena() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { agent, inputs, apiKeys } = location.state || {}
+  const { agent, inputs } = location.state || {}
+  const { apiKeys } = useApiKey()
   useDocumentTitle(agent?.name ? `${agent.name} Battle` : 'Battle Arena')
 
   const [results, setResults] = useState({
@@ -74,7 +76,7 @@ export default function BattleModeArena() {
 
   // Redirect if no state
   useEffect(() => {
-    if (!agent || !inputs || !apiKeys) {
+    if (!agent || !inputs || !apiKeys.openai || !apiKeys.anthropic || !apiKeys.gemini) {
       navigate('/battle/setup', { replace: true })
     }
   }, [agent, inputs, apiKeys, navigate])

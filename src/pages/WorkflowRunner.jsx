@@ -81,7 +81,7 @@ export default function WorkflowRunner() {
   const navigate = useNavigate()
   const { agents } = useAgents()
 
-  const { provider, setProvider, apiKey, setApiKey, saveForSession, setSaveForSession } = useApiKey()
+  const { provider, apiKey } = useApiKey()
 
   const [workflow, setWorkflow] = useState(location.state?.workflow ?? null)
   const [loadingWorkflow, setLoadingWorkflow] = useState(!location.state?.workflow)
@@ -256,12 +256,6 @@ export default function WorkflowRunner() {
 
       {/* API Key Bar */}
       <ApiKeyBar
-        provider={provider}
-        setProvider={setProvider}
-        apiKey={apiKey}
-        setApiKey={setApiKey}
-        saveForSession={saveForSession}
-        setSaveForSession={setSaveForSession}
         agentProvider="any"
         model={MODEL_MAP[provider] || MODEL_MAP.openai}
         setModel={() => {}}

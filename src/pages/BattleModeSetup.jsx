@@ -8,6 +8,7 @@ const providerUrls = {
   gemini: 'https://console.cloud.google.com/apis/credentials',
 }
 import { useAgents } from '../lib/useAgents'
+import { useApiKey } from '../lib/useApiKey'
 import BattleNavbar from '../components/BattleNavbar'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
@@ -17,7 +18,7 @@ export default function BattleModeSetup() {
   useDocumentTitle('Battle Mode Setup')
   const [selectedAgentId, setSelectedAgentId] = useState('')
   const [inputs, setInputs] = useState({})
-  const [apiKeys, setApiKeys] = useState({ openai: '', anthropic: '', gemini: '' })
+  const { apiKeys, setApiKeys, saveForSession, setSaveForSession } = useApiKey()
 
   const selectedAgent = useMemo(
     () => agents.find((a) => a.id === selectedAgentId),
@@ -78,6 +79,10 @@ export default function BattleModeSetup() {
         apiKeys,
       },
     })
+  }
+
+  const handleKeyChange = (providerId, value) => {
+    setApiKeys((prev) => ({ ...prev, [providerId]: value }))
   }
 
   const keyFields = [
