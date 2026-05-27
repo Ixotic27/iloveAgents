@@ -12,6 +12,13 @@ export function AgentsProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [shouldLoad, setShouldLoad] = useState(false)
+  const [loadVersion, setLoadVersion] = useState(0)
+
+  const reloadAgents = () => {
+    setLoading(true)
+    setError(null)
+    setLoadVersion((v) => v + 1)
+  }
 
   useEffect(() => {
     if (!shouldLoad) return;
@@ -36,10 +43,10 @@ export function AgentsProvider({ children }) {
     return () => {
       isMounted = false
     }
-  }, [shouldLoad])
+  }, [shouldLoad, loadVersion])
 
   return (
-    <AgentsContext.Provider value={{ agents, loading, error, setShouldLoad }}>
+    <AgentsContext.Provider value={{ agents, loading, error, setShouldLoad, reloadAgents }}>
       {children}
     </AgentsContext.Provider>
   )
@@ -63,5 +70,6 @@ export function useAgents() {
     agents: context.agents,
     loading: context.loading,
     error: context.error,
+    reloadAgents: context.reloadAgents,
   }
 }

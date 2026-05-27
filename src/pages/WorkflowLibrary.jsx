@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Plus,
@@ -16,9 +16,8 @@ import { fetchWorkflows, subscribeToAllWorkflows } from '../hooks/useWorkflows'
 import { supabase } from '../lib/supabase'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
-function AgentPill({ agentId }) {
-  const { agents } = useAgents()
-  const agent = agents.find((a) => a.id === agentId)
+function AgentPill({ agentId, agentsMap }) {
+  const agent = agentsMap[agentId]
   if (!agent) return <span className="text-[11px] dark:text-text-muted text-gray-400">{agentId}</span>
   return (
     <span
@@ -31,7 +30,7 @@ function AgentPill({ agentId }) {
   )
 }
 
-function WorkflowCard({ workflow, onRun, onView }) {
+function WorkflowCard({ workflow, onRun, onView, agentsMap }) {
   const [usageCount, setUsageCount] = useState(workflow.usage_count ?? 0)
 
   // Sync when parent data refreshes
@@ -96,7 +95,7 @@ function WorkflowCard({ workflow, onRun, onView }) {
       <div className="flex flex-wrap items-center gap-1.5 mb-4">
         {(workflow.agents ?? []).map((agentId, index) => (
           <span key={agentId + index} className="flex items-center gap-1">
-            <AgentPill agentId={agentId} />
+            <AgentPill agentId={agentId} agentsMap={agentsMap} />
             {index < workflow.agents.length - 1 && (
               <ArrowRight size={10} className="dark:text-text-muted text-gray-400 flex-shrink-0" />
             )}
@@ -140,6 +139,14 @@ export default function WorkflowLibrary() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+
+  const { agents } = useAgents()
+  const agentsMap = useMemo(() => {
+    return agents.reduce((acc, a) => {
+      acc[a.id] = a
+      return acc
+    }, {})
+  }, [agents])
 
   // Initial fetch
   useEffect(() => {
@@ -302,6 +309,7 @@ export default function WorkflowLibrary() {
                   workflow={workflow}
                   onRun={handleRun}
                   onView={handleView}
+                  agentsMap={agentsMap}
                 />
               </div>
             ))}

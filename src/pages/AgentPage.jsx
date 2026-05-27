@@ -6,7 +6,7 @@ import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 export default function AgentPage() {
   const { id } = useParams()
-  const { agents, loading, error } = useAgents()
+  const { agents, loading, error, reloadAgents } = useAgents()
   const agent = agents.find((a) => a.id === id)
   useDocumentTitle(agent?.name ?? 'Agent')
 
@@ -30,8 +30,17 @@ export default function AgentPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent" />
+      <div
+        className="flex items-center justify-center py-20"
+        role="status"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div
+          className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"
+          aria-hidden="true"
+        />
+        <span className="sr-only">Loading agent</span>
       </div>
     )
   }
@@ -44,7 +53,7 @@ export default function AgentPage() {
           There was an error loading the agent definitions. Please check your connection and try again.
         </p>
         <button
-          onClick={() => window.location.reload()}
+          onClick={reloadAgents}
           className="px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90 transition-colors"
         >
           Retry

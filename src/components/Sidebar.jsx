@@ -6,11 +6,11 @@ import { useAgents } from '../lib/useAgents'
 export default function Sidebar({ open, onClose }) {
   const { agents } = useAgents()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
-
+  const searchLower = sidebarSearchQuery.toLowerCase()
   const filteredAgents = agents.filter((agent) => {
     const category = agent.category || 'Uncategorized'
-    return agent.name.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
-      category.toLowerCase().includes(sidebarSearchQuery.toLowerCase())
+    return agent.name.toLowerCase().includes(searchLower) ||
+      category.toLowerCase().includes(searchLower)
   })
 
   // Group agents by category
