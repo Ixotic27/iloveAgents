@@ -19,14 +19,22 @@ const modules = import.meta.glob('./definitions/*.js', { eager: false });
  * @returns {Promise<Array>} Array of agent definition objects.
  */
 let cachedAgents = null;
+let cachedAgentsPromise = null;
 
 export async function loadAllAgents() {
   if (cachedAgents) return cachedAgents;
+  
+  if (!cachedAgentsPromise) {
+    cachedAgentsPromise = Promise.all(
+      Object.values(modules).map((loader) => loader())
+    ).then((entries) => {
+      cachedAgents = entries.map((mod) => mod.default);
+      return cachedAgents;
+    }).catch((err) => {
+      cachedAgentsPromise = null; // Reset on error so subsequent calls can retry
+      throw err;
+    });
+  }
 
-  const entries = await Promise.all(
-    Object.values(modules).map((loader) => loader())
-  );
-
-  cachedAgents = entries.map((mod) => mod.default);
-  return cachedAgents;
+  return cachedAgentsPromise;
 }

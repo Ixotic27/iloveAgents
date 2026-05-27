@@ -11,8 +11,11 @@ export function AgentsProvider({ children }) {
   const [agents, setAgents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [shouldLoad, setShouldLoad] = useState(false)
 
   useEffect(() => {
+    if (!shouldLoad) return;
+
     let isMounted = true
 
     loadAllAgents()
@@ -33,10 +36,10 @@ export function AgentsProvider({ children }) {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [shouldLoad])
 
   return (
-    <AgentsContext.Provider value={{ agents, loading, error }}>
+    <AgentsContext.Provider value={{ agents, loading, error, setShouldLoad }}>
       {children}
     </AgentsContext.Provider>
   )
@@ -51,5 +54,14 @@ export function useAgents() {
   if (context === null) {
     throw new Error('useAgents must be used within an AgentsProvider')
   }
-  return context
+
+  useEffect(() => {
+    context.setShouldLoad(true)
+  }, [context])
+
+  return {
+    agents: context.agents,
+    loading: context.loading,
+    error: context.error,
+  }
 }
