@@ -57,7 +57,7 @@ export function useAgents() {
 
   useEffect(() => {
     context.setShouldLoad(true)
-  }, [context])
+  }, [context.setShouldLoad])
 
   return {
     agents: context.agents,
