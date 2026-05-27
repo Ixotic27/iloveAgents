@@ -7,12 +7,13 @@ const providerUrls = {
   anthropic: 'https://console.anthropic.com/keys',
   gemini: 'https://console.cloud.google.com/apis/credentials',
 }
-import agents from '../agents/registry'
+import { useAgents } from '../lib/useAgents'
 import BattleNavbar from '../components/BattleNavbar'
 import { useDocumentTitle } from '../lib/useDocumentTitle'
 
 export default function BattleModeSetup() {
   const navigate = useNavigate()
+  const { agents } = useAgents()
   useDocumentTitle('Battle Mode Setup')
   const [selectedAgentId, setSelectedAgentId] = useState('')
   const [inputs, setInputs] = useState({})
