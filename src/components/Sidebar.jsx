@@ -7,16 +7,17 @@ export default function Sidebar({ open, onClose }) {
   const { agents } = useAgents()
   const [sidebarSearchQuery, setSidebarSearchQuery] = useState('')
 
-  // Filter agents based on search query
-  const filteredAgents = agents.filter((agent) =>
-    agent.name.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
-    agent.category.toLowerCase().includes(sidebarSearchQuery.toLowerCase())
-  )
+  const filteredAgents = agents.filter((agent) => {
+    const category = agent.category || 'Uncategorized'
+    return agent.name.toLowerCase().includes(sidebarSearchQuery.toLowerCase()) ||
+      category.toLowerCase().includes(sidebarSearchQuery.toLowerCase())
+  })
 
   // Group agents by category
   const categories = filteredAgents.reduce((acc, agent) => {
-    if (!acc[agent.category]) acc[agent.category] = []
-    acc[agent.category].push(agent)
+    const category = agent.category || 'Uncategorized'
+    if (!acc[category]) acc[category] = []
+    acc[category].push(agent)
     return acc
   }, {})
 

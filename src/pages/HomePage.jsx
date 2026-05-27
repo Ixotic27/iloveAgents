@@ -37,7 +37,7 @@ export default function HomePage() {
 
   // Derive unique sorted categories from the loaded agents
   const allCategories = useMemo(
-    () => [...new Set(agents.map((a) => a.category))].sort(),
+    () => [...new Set(agents.map((a) => a.category || 'Uncategorized'))].sort(),
     [agents]
   )
 
@@ -77,10 +77,11 @@ export default function HomePage() {
       if (!searchQuery.trim()) return true
 
       const q = searchQuery.toLowerCase()
+      const cat = agent.category || 'Uncategorized'
       return (
         agent.name.toLowerCase().includes(q) ||
         agent.description.toLowerCase().includes(q) ||
-        agent.category.toLowerCase().includes(q)
+        cat.toLowerCase().includes(q)
       )
     })
   }, [searchQuery, selectedCategory, agents])
