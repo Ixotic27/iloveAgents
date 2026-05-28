@@ -14,9 +14,10 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import * as Icons from 'lucide-react'
-import agents from '../agents/registry'
+import { useAgents } from '../lib/useAgents'
 import OutputRenderer from '../components/OutputRenderer'
 import ApiKeyBar from '../components/ApiKeyBar'
+import RunRating from '../components/RunRating'
 import { useApiKey } from '../lib/useApiKey'
 import { runAgent } from '../lib/llmAdapter'
 import { resolveAgentModel, MODEL_MAP } from '../lib/resolveAgentModel'
@@ -79,8 +80,9 @@ export default function WorkflowRunner() {
   const { id } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
+  const { agents } = useAgents()
 
-  const { provider, setProvider, apiKey, setApiKey, saveForSession, setSaveForSession } = useApiKey()
+  const { provider, apiKey } = useApiKey()
 
   const [workflow, setWorkflow] = useState(location.state?.workflow ?? null)
   const [loadingWorkflow, setLoadingWorkflow] = useState(!location.state?.workflow)
@@ -255,12 +257,6 @@ export default function WorkflowRunner() {
 
       {/* API Key Bar */}
       <ApiKeyBar
-        provider={provider}
-        setProvider={setProvider}
-        apiKey={apiKey}
-        setApiKey={setApiKey}
-        saveForSession={saveForSession}
-        setSaveForSession={setSaveForSession}
         agentProvider="any"
         model={MODEL_MAP[provider] || MODEL_MAP.openai}
         setModel={() => {}}
@@ -393,6 +389,7 @@ export default function WorkflowRunner() {
                       outputType={step.agent?.outputType ?? 'text'}
                       agentName={step.agentName}
                     />
+                    <RunRating />
                   </div>
                 )}
 
