@@ -2,9 +2,9 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 
 const ApiKeyContext = createContext(null)
 
-const STORAGE_KEYS_PREFIX = 'ila_apikeys'
-const STORAGE_PROVIDER_PREFIX = 'ila_active_provider'
-const STORAGE_SAVE_PREFIX = 'ila_save_session'
+const STORAGE_KEYS_KEY = 'ila_apikeys'
+const STORAGE_PROVIDER_KEY = 'ila_active_provider'
+const STORAGE_SAVE_KEY = 'ila_save_session'
 
 export function ApiKeyProvider({ children }) {
   const [apiKeys, setApiKeys] = useState({ openai: '', anthropic: '', gemini: '' })
@@ -14,11 +14,11 @@ export function ApiKeyProvider({ children }) {
 
   // Initialize from sessionStorage on mount
   useEffect(() => {
-    const savedSave = sessionStorage.getItem(STORAGE_SAVE_PREFIX) === 'true'
+    const savedSave = sessionStorage.getItem(STORAGE_SAVE_KEY) === 'true'
     setSaveForSession(savedSave)
 
     if (savedSave) {
-      const savedKeysStr = sessionStorage.getItem(STORAGE_KEYS_PREFIX)
+      const savedKeysStr = sessionStorage.getItem(STORAGE_KEYS_KEY)
       if (savedKeysStr) {
         try {
           const parsed = JSON.parse(savedKeysStr)
@@ -29,7 +29,7 @@ export function ApiKeyProvider({ children }) {
           // ignore parse error
         }
       }
-      const savedProvider = sessionStorage.getItem(STORAGE_PROVIDER_PREFIX)
+      const savedProvider = sessionStorage.getItem(STORAGE_PROVIDER_KEY)
       if (savedProvider) {
         setProvider(savedProvider)
       }
@@ -42,19 +42,24 @@ export function ApiKeyProvider({ children }) {
     if (!isInitialized) return
 
     if (saveForSession) {
-      sessionStorage.setItem(STORAGE_SAVE_PREFIX, 'true')
-      sessionStorage.setItem(STORAGE_KEYS_PREFIX, JSON.stringify(apiKeys))
-      sessionStorage.setItem(STORAGE_PROVIDER_PREFIX, provider)
+      sessionStorage.setItem(STORAGE_SAVE_KEY, 'true')
+      sessionStorage.setItem(STORAGE_KEYS_KEY, JSON.stringify(apiKeys))
+      sessionStorage.setItem(STORAGE_PROVIDER_KEY, provider)
     } else {
-      sessionStorage.removeItem(STORAGE_SAVE_PREFIX)
-      sessionStorage.removeItem(STORAGE_KEYS_PREFIX)
-      sessionStorage.removeItem(STORAGE_PROVIDER_PREFIX)
+      sessionStorage.removeItem(STORAGE_SAVE_KEY)
+      sessionStorage.removeItem(STORAGE_KEYS_KEY)
+      sessionStorage.removeItem(STORAGE_PROVIDER_KEY)
     }
   }, [apiKeys, provider, saveForSession, isInitialized])
 
   // Helper to set a specific provider's key
   const setApiKeyForProvider = useCallback((prov, key) => {
     setApiKeys((prev) => ({ ...prev, [prov]: key }))
+  }, [])
+
+  // Explicitly clear all keys
+  const clearKeys = useCallback(() => {
+    setApiKeys({ openai: '', anthropic: '', gemini: '' })
   }, [])
 
   // Compatibility bindings for single-key components
@@ -72,7 +77,8 @@ export function ApiKeyProvider({ children }) {
     setApiKey,
     saveForSession,
     setSaveForSession,
-    setApiKeyForProvider
+    setApiKeyForProvider,
+    clearKeys
   }
 
   return <ApiKeyContext.Provider value={value}>{children}</ApiKeyContext.Provider>

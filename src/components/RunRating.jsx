@@ -29,16 +29,20 @@ export default function RunRating() {
       </span>
       <div className="flex items-center gap-1">
         <button
+          type="button"
           onClick={() => handleRate('up')}
           className="p-1.5 rounded-md text-gray-400 hover:text-green-500 hover:bg-green-500/10 transition-colors"
           title="Good output"
+          aria-label="Rate as good output"
         >
           <ThumbsUp size={16} />
         </button>
         <button
+          type="button"
           onClick={() => handleRate('down')}
           className="p-1.5 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
           title="Bad output"
+          aria-label="Rate as bad output"
         >
           <ThumbsDown size={16} />
         </button>

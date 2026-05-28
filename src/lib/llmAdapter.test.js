@@ -1,13 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { runAgent, fetchGeminiModels } from './llmAdapter'
 
 // Mock global fetch
 const mockFetch = vi.fn()
-global.fetch = mockFetch
 
 describe('llmAdapter', () => {
   beforeEach(() => {
+    vi.stubGlobal('fetch', mockFetch)
     mockFetch.mockReset()
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
   })
 
   describe('runAgent', () => {

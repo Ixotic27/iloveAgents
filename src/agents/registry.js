@@ -18,15 +18,16 @@ const modules = import.meta.glob('./definitions/*.js', { eager: false });
  * Results are cached after the first call.
  * @returns {Promise<Array>} Array of agent definition objects.
  */
-let cachedAgents = null;
+let cachedAgentsPromise = null;
 
-export async function loadAllAgents() {
-  if (cachedAgents) return cachedAgents;
+export function loadAllAgents() {
+  if (cachedAgentsPromise) return cachedAgentsPromise;
 
-  const entries = await Promise.all(
+  cachedAgentsPromise = Promise.all(
     Object.values(modules).map((loader) => loader())
-  );
+  ).then((entries) => {
+    return entries.map((mod) => mod.default);
+  });
 
-  cachedAgents = entries.map((mod) => mod.default);
-  return cachedAgents;
+  return cachedAgentsPromise;
 }
